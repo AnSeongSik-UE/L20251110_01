@@ -2,13 +2,17 @@
 
 
 #include "P38.h"
+#include "Rocket.h"
+
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
-#include "Rocket.h"
+#include "EnhancedInputComponent.h"
+#include "InputAction.h"
+#include "InputActionValue.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -64,6 +68,18 @@ AP38::AP38()
 	Movement->MaxSpeed = 0.f;
 	Movement->Acceleration = 4000.f;
 	Movement->Deceleration = 8000.f;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> IA_FireAsset(TEXT("/Script/EnhancedInput.InputAction'/Game/Inputs/IA_Fire.IA_Fire'"));
+	if (IA_FireAsset.Succeeded())
+	{
+		IA_Fire = IA_FireAsset.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> IA_MovementAsset(TEXT("/Script/EnhancedInput.InputAction'/Game/Inputs/IA_Movement.IA_Movement'"));
+	if (IA_MovementAsset.Succeeded())
+	{
+		IA_Movement = IA_MovementAsset.Object;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -88,10 +104,33 @@ void AP38::Tick(float DeltaTime)
 void AP38::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed, this, &AP38::Fire);
+	//¿¹Àü°Å
+	//PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed, this, &AP38::Fire);
 
-	PlayerInputComponent->BindAxis(TEXT("Pitch"), this, &AP38::Pitch);
-	PlayerInputComponent->BindAxis(TEXT("Roll"), this, &AP38::Roll);
+	//PlayerInputComponent->BindAxis(TEXT("Pitch"), this, &AP38::Pitch);
+	//PlayerInputComponent->BindAxis(TEXT("Roll"), this, &AP38::Roll);
+
+	UEnhancedInputComponent* UIC = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (UIC)
+	{
+		UIC->BindAction(IA_Fire, ETriggerEvent::Completed, this, &AP38::EnhancedFire);
+		UIC->BindAction(IA_Movement, ETriggerEvent::Triggered, this, &AP38::ProcessMovement);
+	}
+}
+
+void AP38::EnhancedFire(const FInputActionValue& Value)
+{
+	Fire();
+}
+
+void AP38::ProcessMovement(const FInputActionValue& Value)
+{
+	FVector2D WantedRotation = Value.Get<FVector2D>();
+	//WantedRotation = WantedRotation * 60.0f * UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+	//AddActorLocalRotation(FRotator(WantedRotation.X, 0, WantedRotation.Y);
+
+	Pitch(WantedRotation.Y);
+	Roll(WantedRotation.X);
 }
 
 void AP38::Fire()

@@ -52,7 +52,7 @@ void ARocket::BeginPlay()
 
 	//Delegate UE
 	OnActorBeginOverlap.AddDynamic(this, &ARocket::ProcessActorBeginOverlap);
-	OnActorBeginOverlap.Remove(this, TEXT("ProcessActorBeginOverlap"));
+	//OnActorBeginOverlap.Remove(this, TEXT("ProcessActorBeginOverlap"));
 }
 
 // Called every frame
@@ -64,11 +64,13 @@ void ARocket::Tick(float DeltaTime)
 
 void ARocket::Timeout()
 {
+	//UE_LOG(LogTemp, Warning, TEXT("Died"));
 	Destroy();
 }
 
 void ARocket::ProcessActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
+	UE_LOG(LogTemp, Warning, TEXT("OverLapped"));
 	UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);
 }
 

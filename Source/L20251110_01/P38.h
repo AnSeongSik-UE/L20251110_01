@@ -12,6 +12,8 @@ class UArrowComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UFloatingPawnMovement;
+class UInputAction;
+struct FInputActionValue;
 
 UCLASS()
 class L20251110_01_API AP38 : public APawn
@@ -33,7 +35,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-protected:
+	void EnhancedFire(const FInputActionValue& Value);
+
+	void ProcessMovement(const FInputActionValue& Value);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component)
 	TObjectPtr<UBoxComponent> Box;
 
@@ -61,4 +66,10 @@ protected:
 	void Fire();
 	void Pitch(float Value);
 	void Roll(float Value);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	TObjectPtr<UInputAction> IA_Fire;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	TObjectPtr<UInputAction> IA_Movement;
 };

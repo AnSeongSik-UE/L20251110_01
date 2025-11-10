@@ -16,7 +16,7 @@ AMyTarget::AMyTarget()
 	{
 		GetStaticMeshComponent()->SetStaticMesh(SM_MySphere.Object);
 	}
-	//GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
+	GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
 	GetStaticMeshComponent()->SetCollisionProfileName(TEXT("OverlapAll"));
 
 }
@@ -32,7 +32,6 @@ void AMyTarget::BeginPlay()
 void AMyTarget::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AMyTarget::ProcessTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
