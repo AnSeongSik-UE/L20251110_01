@@ -34,10 +34,16 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	void EnhancedFire(const FInputActionValue& Value);
-
 	void ProcessMovement(const FInputActionValue& Value);
+	void Fire();
+	void Pitch(float Value);
+	void Roll(float Value);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	TObjectPtr<UInputAction> IA_Fire;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	TObjectPtr<UInputAction> IA_Movement;
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component)
 	TObjectPtr<UBoxComponent> Box;
@@ -63,13 +69,4 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component)
 	TObjectPtr<UFloatingPawnMovement> Movement;
 
-	void Fire();
-	void Pitch(float Value);
-	void Roll(float Value);
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	TObjectPtr<UInputAction> IA_Fire;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	TObjectPtr<UInputAction> IA_Movement;
 };
