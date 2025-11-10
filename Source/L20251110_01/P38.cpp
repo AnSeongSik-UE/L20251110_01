@@ -88,7 +88,7 @@ void AP38::Tick(float DeltaTime)
 void AP38::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	//PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed, this, &AP38::Fire);
+	PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed, this, &AP38::Fire);
 
 	PlayerInputComponent->BindAxis(TEXT("Pitch"), this, &AP38::Pitch);
 	PlayerInputComponent->BindAxis(TEXT("Roll"), this, &AP38::Roll);

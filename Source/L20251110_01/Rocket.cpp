@@ -7,6 +7,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ARocket::ARocket()
@@ -44,8 +45,14 @@ void ARocket::BeginPlay()
 	FLatentActionInfo Info;
 	Info.ExecutionFunction = TEXT("Timeout");
 	Info.CallbackTarget = this;
+	Info.Linkage = 1;
+	Info.UUID = 0;
 
 	UKismetSystemLibrary::Delay(GetWorld(), 1.0f, Info);
+
+	//Delegate UE
+	OnActorBeginOverlap.AddDynamic(this, &ARocket::ProcessActorBeginOverlap);
+	OnActorBeginOverlap.Remove(this, TEXT("ProcessActorBeginOverlap"));
 }
 
 // Called every frame
@@ -58,5 +65,10 @@ void ARocket::Tick(float DeltaTime)
 void ARocket::Timeout()
 {
 	Destroy();
+}
+
+void ARocket::ProcessActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);
 }
 
