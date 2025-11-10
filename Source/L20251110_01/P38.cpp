@@ -61,7 +61,7 @@ AP38::AP38()
 	Arrow->SetRelativeLocation(FVector(70.f, 0, 0));
 
 	Movement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Movement"));
-	Movement->MaxSpeed = 100.f;
+	Movement->MaxSpeed = 0.f;
 	Movement->Acceleration = 4000.f;
 	Movement->Deceleration = 8000.f;
 }
